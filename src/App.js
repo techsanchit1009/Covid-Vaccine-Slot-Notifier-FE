@@ -47,8 +47,7 @@ function App() {
   const submitDetails = (e) => {
     e.preventDefault();
     if (pincode.length && pincode.length <= 6) {
-      console.log('submit');
-      axios.post('http://localhost:8080/add-pincode', {
+      axios.post('http://65.2.79.198/add-pincode', {
         pincode,
       })
       .then(resp => {
