@@ -47,7 +47,7 @@ function App() {
   const submitDetails = (e) => {
     e.preventDefault();
     if (pincode.length && pincode.length <= 6) {
-      axios.post('http://65.2.79.198/add-pincode', {
+      axios.post('https://covid-vaccine-slot-be.herokuapp.com/add-pincode', {
         pincode,
       })
       .then(resp => {
