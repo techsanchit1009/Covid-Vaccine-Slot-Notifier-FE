@@ -47,7 +47,7 @@ function App() {
   const submitDetails = (e) => {
     e.preventDefault();
     if (pincode.length && pincode.length <= 6) {
-      axios.post('http://13.233.159.216/api/add-pincode', {
+      axios.post('http://ec2-13-233-159-216.ap-south-1.compute.amazonaws.com/api/add-pincode', {
         pincode,
       })
       .then(resp => {
