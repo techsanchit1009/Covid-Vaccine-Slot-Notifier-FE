@@ -35,7 +35,7 @@ function App() {
   const [pincode, setPincode] = useState('');
   const [ageGroup, setAgeGroup] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
-
+  const showJoinTelegram = localStorage.getItem('showJoinTelegram') || false;
   const pincodeChangeHandler = (e) => {
     setPincode(e.target.value);
   }
@@ -46,18 +46,21 @@ function App() {
 
   const submitDetails = (e) => {
     e.preventDefault();
-    if (pincode.length && pincode.length <= 6) {
+    if (pincode.length && pincode.length === 6) {
       axios.post('http://ec2-13-233-159-216.ap-south-1.compute.amazonaws.com/api/add-pincode', {
         pincode,
       })
       .then(resp => {
-        if (resp.data && resp.data.pincodes) {
+        localStorage.setItem('showJoinTelegram', true);
+        if (resp.data && resp.data.available_pincodes) {
           toast.dark('✅ Join us at Telegram to get notified for slots!');
         }
         setPincode('');
         setAgeGroup('');
       });
-    } 
+    } else {
+      toast.error('Please enter a valid pincode');
+    }
   }
 
   const closeInfoModal = () => {
@@ -80,7 +83,9 @@ function App() {
         Please enter valid Pincode to start receiving slot availability
         notification
       </h3>
-      <p className="help-link" onClick={() => setShowInfoModal(true)}>How does it work?</p>
+      <div>
+        <span className="help-link" onClick={() => setShowInfoModal(true)}>How does it work?</span>
+      </div>
       <InfoModal heading="How does it work❓" size='large' show={showInfoModal} closeModalHandler={closeInfoModal}/>
       <form autoComplete="off" className={classes.root} onSubmit={(e) => submitDetails(e)}>
         <TextField
@@ -113,16 +118,17 @@ function App() {
           variant="contained"
           color="primary"
           type="submit"
-          disabled={!pincode.length || pincode.length > 6 ? true : false}
         >
           Submit Details
         </Button>
       </form>
-      <div className="footer">
-        <a href="https://t.me/cowinnotifier" target="_blank" rel="noreferrer">
-          <img className="telegram-join" src={TelegramJoin} alt="Telegram-Join"/>
-        </a>
-      </div>
+      {showJoinTelegram && (
+        <div className="footer">
+          <a href="https://t.me/cowinnotifier" target="_blank" rel="noreferrer">
+            <img className="telegram-join" src={TelegramJoin} alt="Telegram-Join"/>
+          </a>
+        </div>
+      )}
     </div>
   );
 }
